@@ -6,6 +6,7 @@ import { Event } from '../../../graphql/types';
 import AnimalEventFilters, { EVENT_FILTER_ALL, EventCategory } from './AnimalEventFilters';
 import AnimalEventList from './AnimalEventList';
 import AnimalEventSorting, { EventSortingMode } from './AnimalEventSorting';
+import NewEventDialog from './NewEventDialog';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -24,6 +25,7 @@ export default function AnimalEvents({ events }: AnimalEventsProps) {
     const classes = useStyles();
     const [activeFilter, setActiveFilter] = useState<EventCategory>(EVENT_FILTER_ALL);
     const [activeSort, setActiveSort] = useState<EventSortingMode>(EventSortingMode.DESCENDING);
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     const sortByDateComparator = useCallback(
         (event1: Event, event2: Event) => {
@@ -41,7 +43,7 @@ export default function AnimalEvents({ events }: AnimalEventsProps) {
         [activeSort]
     );
 
-    const [filteredEvents, setFilteredEvents] = useState(events.sort(sortByDateComparator));
+    const [filteredEvents, setFilteredEvents] = useState([...events].sort(sortByDateComparator));
 
     const handleFilterChange = (value: EventCategory) => {
         setActiveFilter(value);
@@ -49,6 +51,14 @@ export default function AnimalEvents({ events }: AnimalEventsProps) {
 
     const handleSortChange = (sortingMode: EventSortingMode) => {
         setActiveSort(sortingMode);
+    };
+
+    const handleDialogOpen = () => {
+        setDialogOpen(true);
+    };
+
+    const handleDialogClose = () => {
+        setDialogOpen(false);
     };
 
     useEffect(() => {
@@ -65,13 +75,24 @@ export default function AnimalEvents({ events }: AnimalEventsProps) {
                 <Typography variant="h5" component="h3">
                     Events
                 </Typography>
-                <Button color="primary" variant="contained" startIcon={<AddIcon />}>
+                <Button color="primary" variant="contained" startIcon={<AddIcon />} onClick={handleDialogOpen}>
                     Create
                 </Button>
             </Box>
             <AnimalEventFilters activeFilter={activeFilter} onChange={handleFilterChange} />
             <AnimalEventSorting sortingMode={activeSort} onChange={handleSortChange} />
             <AnimalEventList events={filteredEvents} />
+            <NewEventDialog
+                dialogOpen={dialogOpen}
+                label="Type"
+                onClose={handleDialogClose}
+                onCancel={handleDialogClose}
+                onChange={() => alert('changed')}
+                onCreate={handleDialogClose}
+                options={TypeOptions}
+                setDialogOpen={setDialogOpen}
+                value="Type"
+            />
         </Box>
     );
 }
@@ -79,3 +100,17 @@ export default function AnimalEvents({ events }: AnimalEventsProps) {
 interface AnimalEventsProps {
     events: Event[];
 }
+
+const TypeOptions = [
+    'Ženklinimas ir įregistravimas',
+    'Laikytojo pasikeitimas',
+    'Laikymo vietos pasikeitimas',
+    'Savininko pasikeitimas',
+    'Dingimas',
+    'Suradimas',
+    'Nugaišimas',
+    'Nugaišinimas',
+    'Išvežimas',
+    'Vakcinavimas',
+    'Augintinio agresyvumas',
+];
