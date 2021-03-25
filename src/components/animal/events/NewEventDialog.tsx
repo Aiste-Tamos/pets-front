@@ -1,6 +1,17 @@
 import React from 'react';
 
-import { Box, Button, DialogActions, DialogContent, Grid, MenuItem, Select, Typography } from '@material-ui/core';
+import {
+    Box,
+    Button,
+    DialogActions,
+    DialogContent,
+    Grid,
+    MenuItem,
+    Select,
+    Typography,
+    useMediaQuery,
+    useTheme,
+} from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 
 export default function NewEventDialog({
@@ -8,18 +19,20 @@ export default function NewEventDialog({
     onCreate,
     dialogOpen,
     setDialogOpen,
+    onChange,
     onClose,
     value,
     label,
     options,
-    onChange,
 }) {
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const selectId = `${label}-select`;
     const labelId = `${selectId}-label`;
 
     return (
         <Grid container alignItems="center" spacing={1}>
-            <Dialog open={dialogOpen} onClose={onClose}>
+            <Dialog fullWidth maxWidth="sm" open={dialogOpen} fullScreen={fullScreen} onClose={onClose}>
                 <DialogContent>
                     <Box display="flex" justifyContent="space-between" alignItems="center">
                         <Typography variant="h6">Create new event</Typography>
@@ -29,7 +42,7 @@ export default function NewEventDialog({
                         id={selectId}
                         label={label}
                         value={value ?? ''}
-                        onChange={event => onChange(event.target.value as string)}
+                        onChange={onChange}
                     >
                         {options.map((option, id) => (
                             <MenuItem key={id} value={option}>

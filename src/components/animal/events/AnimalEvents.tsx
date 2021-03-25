@@ -25,6 +25,7 @@ export default function AnimalEvents({ events }: AnimalEventsProps) {
     const classes = useStyles();
     const [activeFilter, setActiveFilter] = useState<EventCategory>(EVENT_FILTER_ALL);
     const [activeSort, setActiveSort] = useState<EventSortingMode>(EventSortingMode.DESCENDING);
+    const [activeOption, setActiveOption] = useState(TypeOptions[0]);
     const [dialogOpen, setDialogOpen] = useState(false);
 
     const sortByDateComparator = useCallback(
@@ -87,11 +88,11 @@ export default function AnimalEvents({ events }: AnimalEventsProps) {
                 label="Type"
                 onClose={handleDialogClose}
                 onCancel={handleDialogClose}
-                onChange={() => alert('changed')}
+                onChange={e => setActiveOption(e.target.value as string)}
                 onCreate={handleDialogClose}
                 options={TypeOptions}
                 setDialogOpen={setDialogOpen}
-                value="Type"
+                value={activeOption}
             />
         </Box>
     );

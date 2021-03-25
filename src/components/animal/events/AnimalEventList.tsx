@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Box, List, ListItem, Typography } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { Event } from '../../../graphql/types';
