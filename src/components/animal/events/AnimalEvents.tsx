@@ -21,12 +21,27 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+const TypeOptions = [
+    'Ženklinimas ir įregistravimas',
+    'Laikytojo pasikeitimas',
+    'Laikymo vietos pasikeitimas',
+    'Savininko pasikeitimas',
+    'Dingimas',
+    'Suradimas',
+    'Nugaišimas',
+    'Nugaišinimas',
+    'Išvežimas',
+    'Vakcinavimas',
+    'Augintinio agresyvumas',
+];
+
+const CategoryOptions = ['General', 'Medical'];
+
 export default function AnimalEvents({ events }: AnimalEventsProps) {
     const classes = useStyles();
     const [activeFilter, setActiveFilter] = useState<EventCategory>(EVENT_FILTER_ALL);
     const [activeSort, setActiveSort] = useState<EventSortingMode>(EventSortingMode.DESCENDING);
-    const [activeOption, setActiveOption] = useState(TypeOptions[0]);
-    const [dialogOpen, setDialogOpen] = useState(false);
+    const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
     const sortByDateComparator = useCallback(
         (event1: Event, event2: Event) => {
@@ -58,8 +73,12 @@ export default function AnimalEvents({ events }: AnimalEventsProps) {
         setDialogOpen(true);
     };
 
-    const handleDialogClose = () => {
-        setDialogOpen(false);
+    const handleDialogCancel = showDialog => {
+        setDialogOpen(showDialog);
+    };
+
+    const handleCreateEvent = newEvent => {
+        setFilteredEvents([...filteredEvents, newEvent]);
     };
 
     useEffect(() => {
@@ -85,14 +104,10 @@ export default function AnimalEvents({ events }: AnimalEventsProps) {
             <AnimalEventList events={filteredEvents} />
             <NewEventDialog
                 dialogOpen={dialogOpen}
-                label="Type"
-                onClose={handleDialogClose}
-                onCancel={handleDialogClose}
-                onChange={e => setActiveOption(e.target.value as string)}
-                onCreate={handleDialogClose}
-                options={TypeOptions}
-                setDialogOpen={setDialogOpen}
-                value={activeOption}
+                onCancel={handleDialogCancel}
+                onCreate={handleCreateEvent}
+                typeOptions={TypeOptions}
+                categoryOptions={CategoryOptions}
             />
         </Box>
     );
@@ -101,17 +116,3 @@ export default function AnimalEvents({ events }: AnimalEventsProps) {
 interface AnimalEventsProps {
     events: Event[];
 }
-
-const TypeOptions = [
-    'Ženklinimas ir įregistravimas',
-    'Laikytojo pasikeitimas',
-    'Laikymo vietos pasikeitimas',
-    'Savininko pasikeitimas',
-    'Dingimas',
-    'Suradimas',
-    'Nugaišimas',
-    'Nugaišinimas',
-    'Išvežimas',
-    'Vakcinavimas',
-    'Augintinio agresyvumas',
-];
