@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { Box, Button, makeStyles, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
@@ -59,11 +59,7 @@ export default function AnimalEvents({ events }: AnimalEventsProps) {
         [activeSort]
     );
 
-    const memoizedEvents = useMemo(() => {
-        return [...events].sort(sortByDateComparator);
-    }, [events, sortByDateComparator]);
-
-    const [filteredEvents, setFilteredEvents] = useState(memoizedEvents);
+    const [filteredEvents, setFilteredEvents] = useState([...events].sort(sortByDateComparator));
 
     const handleFilterChange = (value: EventCategory) => {
         setActiveFilter(value);
@@ -87,9 +83,11 @@ export default function AnimalEvents({ events }: AnimalEventsProps) {
 
     useEffect(() => {
         setFilteredEvents(
-            memoizedEvents.filter(event => event.category === activeFilter || activeFilter === EVENT_FILTER_ALL)
+            events
+                .filter(event => event.category === activeFilter || activeFilter === EVENT_FILTER_ALL)
+                .sort(sortByDateComparator)
         );
-    }, [activeFilter, memoizedEvents]);
+    }, [activeFilter, events, sortByDateComparator]);
 
     return (
         <Box className={classes.root}>
@@ -114,8 +112,6 @@ export default function AnimalEvents({ events }: AnimalEventsProps) {
         </Box>
     );
 }
-
-export default AnimalEvents;
 
 interface AnimalEventsProps {
     events: Event[];
