@@ -59,6 +59,12 @@ function AnimalDetails({ onLoad }: AnimalDetailsProps) {
     const color = animal.details?.color ? animal.details.color.value : '';
     const animalEvents = events?.[0]?.animalAll ?? [];
 
+    const paramTableItems = [
+        { title: 'Age', value: birthDay },
+        { title: 'Weight', value: weight },
+        { title: 'Color', value: color },
+    ];
+
     return (
         <div className={classes.root}>
             <LayoutMultiColRow>
@@ -92,13 +98,7 @@ function AnimalDetails({ onLoad }: AnimalDetailsProps) {
                                 alignItems="flexStart"
                                 justifyContent="flexStart"
                             >
-                                <ParamTable
-                                    items={[
-                                        { title: 'Age', value: birthDay },
-                                        { title: 'Weight', value: weight },
-                                        { title: 'Color', value: color },
-                                    ]}
-                                />
+                                <ParamTable items={paramTableItems} />
                                 <Typography variant="body2">{animal.comments}</Typography>
                             </Box>
                         </>
